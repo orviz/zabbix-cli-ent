@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2014 
+# Copyright 2014
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -20,5 +20,5 @@ from oslo.config import cfg
 
 def parse_args(argv, default_config_files=None):
     cfg.CONF(argv[1:],
-             project='zabbix-management',
+             project='zabbix-cli-ent',
              default_config_files=default_config_files)

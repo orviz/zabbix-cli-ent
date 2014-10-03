@@ -1,0 +1,2 @@
+class ZMException(Exception):
+    pass
