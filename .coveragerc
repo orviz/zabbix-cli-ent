@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = zm
+omit = zm/tests/*,zm/openstack/*
+
+[report]
+ignore-errors = True
