@@ -37,7 +37,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'zabbix-management'
+project = u'zabbix-cli-ent'
 copyright = u'2014, Pablo Orviz Fernandez
 
 # If true, '()' will be appended to :func: etc. cross-reference text.

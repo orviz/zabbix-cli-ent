@@ -1,4 +1,4 @@
-zabbix-management Style Commandments
+zabbix-cli-ent Style Commandments
 ===============================================
 
 Read the OpenStack Style Commandments http://docs.openstack.org/developer/hacking/

@@ -4,9 +4,9 @@ Installation
 
 At the command line::
 
-    $ pip install zabbix-management
+    $ pip install zabbix-cli-ent
 
 Or, if you have virtualenvwrapper installed::
 
-    $ mkvirtualenv zabbix-management
-    $ pip install zabbix-management
+    $ mkvirtualenv zabbix-cli-ent
+    $ pip install zabbix-cli-ent
