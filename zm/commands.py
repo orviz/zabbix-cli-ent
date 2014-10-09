@@ -1,6 +1,7 @@
 import zm.exception
 import zm.macro
 import zm.utils
+import zm.template
 
 from oslo.config import cfg
 
@@ -10,6 +11,7 @@ CONF = cfg.CONF
 def add_command_parsers(subparsers):
     CommandMacroList(subparsers)
     CommandMacroUpdate(subparsers)
+    CommandTemplateList(subparsers)
 
 
 command_opt = cfg.SubCommandOpt('command',
@@ -57,6 +59,25 @@ class CommandMacroUpdate(Command):
         zm.macro.update(CONF.command.id,
                         CONF.command.value)
 
+
+class CommandTemplateList(Command):
+    def __init__(self, parser, name="template-list",
+                 cmd_help="List templates."):
+        super(CommandTemplateList, self).__init__(parser, name, cmd_help)
+
+        self.parser.add_argument("--host",
+                                 metavar="HOST",
+                                 nargs="*",
+                                 help="Zabbix host name. Accepts multiple values.")
+
+        self.parser.add_argument("--group",
+                                 metavar="HOSTGROUP",
+                                 nargs="*",
+                                 help="Zabbix hosgroup name. Accepts multiple values.")
+
+    def run(self):
+        zm.template.list(CONF.command.host,
+                         CONF.command.group)
 
 class CommandManager(object):
     def execute(self):
