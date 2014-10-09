@@ -8,7 +8,57 @@ Zabbix management command-line client
 * Source: https://github.com/orviz/zabbix-cli-ent
 * Bugs: https://github.com/orviz/zabbix-cli-ent/issues
 
-Features
---------
 
-* TODO
+zabbix-cli-ent allows to perform actions on a Zabbix server
+through command line.
+
+Zabbix web interface usually is the most suitable way for
+administration tasks, however there are times when you
+need to modify settings non-interactively (scripts, ..) or
+even certain actions easily done by command line.
+
+
+Getting Started
+---------------
+
+Install `zabbix-cli-ent` using `pip`, either by getting the
+version uploaded in PyPi:
+
+    # pip install zm
+
+or the one from the current repo:
+
+    # git clone https://github.com/orviz/zabbix-cli-ent.git
+    # cd zabbix-cli-ent && pip install .
+
+
+### Basic Usage
+
+    # zm --help
+
+will list the current actions that can be performed.
+
+Depending on the subcommand it will have different options;
+rely on the `--help` option to learn about each one.
+
+
+**NOTE**: You can provide the connection details as options or
+via a configuration file. Either way, the login, password
+and url must be provided in order to get a successfully
+connection.
+
+
+Extending Functionality
+-----------------------
+
+The code allows to easily extend the functionality. To do
+so:
+    1. Create a new `Command` inherited class that will
+       handle the new functionality.
+       * (`__init__()`) Here you will define the new
+          action's options.
+       * (`run()`) The work to be done.
+    2. Add the brand new class to:
+           `commands.py` > `add_command_parsers()`
+
+There you go!
