@@ -60,10 +60,23 @@ class CommandItemEnable(Command):
         super(CommandItemEnable, self).__init__(parser, name, cmd_help)
 
         self.parser.add_argument("id",
+                                 nargs="*",
                                  metavar="ID/NAME",
-                                 help="Zabbix item/name ID.")
+                                 help="Zabbix item name or ID.")
+
+        self.parser.add_argument("--host",
+                                 metavar="HOST",
+                                 help="Filter by Zabbix host.")
+
+        self.parser.add_argument("--hostgroup",
+                                 metavar="HOSTGROUP",
+                                 help="Filter by Zabbix hostgroup.")
+
     def run(self):
-        zm.item.update(CONF.command.id, status=0)
+        zm.item.update(CONF.command.id,
+                       0,
+                       CONF.command.host,
+                       CONF.command.hostgroup)
 
 
 class CommandItemDisable(Command):
@@ -73,10 +86,21 @@ class CommandItemDisable(Command):
 
         self.parser.add_argument("id",
                                  metavar="ID",
-                                 help="Zabbix item ID.")
+                                 help="Zabbix item name or ID.")
+
+        self.parser.add_argument("--host",
+                                 metavar="HOST",
+                                 help="Filter by Zabbix host.")
+
+        self.parser.add_argument("--hostgroup",
+                                 metavar="HOSTGROUP",
+                                 help="Filter by Zabbix hostgroup.")
 
     def run(self):
-        zm.item.update(CONF.command.id, status=1)
+        zm.item.update(CONF.command.id,
+                       1,
+                       CONF.command.host,
+                       CONF.command.hostgroup)
 
 
 class CommandMacroList(Command):
