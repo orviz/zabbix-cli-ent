@@ -1,14 +1,22 @@
+from __future__ import print_function
+
+import sys
 import zm.exception
+import zm.item
 import zm.macro
-import zm.utils
 import zm.template
+import zm.utils
 
 from oslo.config import cfg
+
 
 CONF = cfg.CONF
 
 
 def add_command_parsers(subparsers):
+    CommandItemList(subparsers)
+    CommandItemEnable(subparsers)
+    CommandItemDisable(subparsers)
     CommandMacroList(subparsers)
     CommandMacroUpdate(subparsers)
     CommandTemplateList(subparsers)
@@ -31,6 +39,44 @@ class Command(object):
 
     def run(self):
         raise NotImplementedError("Method must me overriden on subclass")
+
+
+class CommandItemList(Command):
+    def __init__(self, parser, name="item-list",
+                 cmd_help="List host items."):
+        super(CommandItemList, self).__init__(parser, name, cmd_help)
+
+        self.parser.add_argument("host",
+                                 metavar="ID/HOSTNAME",
+                                 help="Zabbix hostname or ID.")
+
+    def run(self):
+        zm.item.list(CONF.command.host)
+
+
+class CommandItemEnable(Command):
+    def __init__(self, parser, name="item-enable",
+                 cmd_help="Enable host items."):
+        super(CommandItemEnable, self).__init__(parser, name, cmd_help)
+
+        self.parser.add_argument("id",
+                                 metavar="ID/NAME",
+                                 help="Zabbix item/name ID.")
+    def run(self):
+        zm.item.update(CONF.command.id, status=0)
+
+
+class CommandItemDisable(Command):
+    def __init__(self, parser, name="item-disable",
+                 cmd_help="Disable host items."):
+        super(CommandItemDisable, self).__init__(parser, name, cmd_help)
+
+        self.parser.add_argument("id",
+                                 metavar="ID",
+                                 help="Zabbix item ID.")
+
+    def run(self):
+        zm.item.update(CONF.command.id, status=1)
 
 
 class CommandMacroList(Command):
@@ -84,8 +130,8 @@ class CommandManager(object):
         try:
             CONF.command.func()
         except zm.exception.ZMException as e:
-            print >> sys.stderr, "ERROR: %s" % e
+            print("ERROR: %s" % e, file=sys.stderr)
             sys.exit(1)
         except KeyboardInterrupt:
-            print >> sys.stderr, "\nExiting..."
+            print ("\nExiting...", sys.stderr)
             sys.exit(0)

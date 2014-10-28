@@ -1,6 +1,9 @@
+from __future__ import print_function
+
 import prettytable
 import pyzabbix
 import requests
+import sys
 
 from oslo.config import cfg
 
@@ -17,9 +20,11 @@ def login(func):
 
             conn = pyzabbix.ZabbixAPI(CONF.url, s)
             #logger.debug("Login to Zabbix (user '%s')" % CONF.username)
+            print("Login to Zabbix (user '%s')" % CONF.username)
             conn.login(CONF.username, CONF.password)
         except requests.exceptions.HTTPError:
-            logger.error("Zabbix authorization failed")
+            #logger.error("Zabbix authorization failed")
+            print("Zabbix authorization failed")
             sys.exit(1)
 
         #logger.debug("Successfully connected to Zabbix API v%s" % conn.api_version())
@@ -37,4 +42,4 @@ def print_table(columns, row_content, padding_width=1):
     x.padding_width = padding_width
     for row in row_content:
         x.add_row(row)
-    print x
+    print(x)

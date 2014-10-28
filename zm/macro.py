@@ -2,6 +2,7 @@ import pyzabbix
 import zm.utils
 import zm.zutils
 
+
 @zm.utils.login
 def list(conn):
     # FIXME didn't find a way to distinguish between hostids that refer
