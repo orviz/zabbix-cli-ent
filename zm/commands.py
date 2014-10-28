@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import sys
 import zm.exception
+import zm.hostgroup
 import zm.item
 import zm.macro
 import zm.template
@@ -14,6 +15,7 @@ CONF = cfg.CONF
 
 
 def add_command_parsers(subparsers):
+    CommandHostgroupList(subparsers)
     CommandItemList(subparsers)
     CommandItemEnable(subparsers)
     CommandItemDisable(subparsers)
@@ -39,6 +41,15 @@ class Command(object):
 
     def run(self):
         raise NotImplementedError("Method must me overriden on subclass")
+
+
+class CommandHostgroupList(Command):
+    def __init__(self, parser, name="hostgroup-list",
+                 cmd_help="List hostgroups."):
+        super(CommandHostgroupList, self).__init__(parser, name, cmd_help)
+
+    def run(self):
+        zm.hostgroup.list()
 
 
 class CommandItemList(Command):
