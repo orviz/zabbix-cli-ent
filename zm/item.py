@@ -48,13 +48,28 @@ def update(conn, id, status, host=None, hostgroup=None):
                                    output=["status", "name"],
                                    **{"selectHosts": ["name"]}))
 
+    h_parameter = None
+    if host:
+        try:
+            int(host)
+            h_parameter = "hostids"
+        except ValueError:
+            h_parameter = "host"
+    hg_parameter = None
+    if hostgroup:
+        try:
+            int(hostgroup)
+            hg_parameter = "groupids"
+        except ValueError:
+            hg_parameter = "group"
+
     if host or hostgroup:
         hitems = zm.zutils.get(conn,
                               type="item",
                               output=["status", "name"],
                               **{"filter": {"name": id,
-                                            "host": host,
-                                            "hostgroup": hostgroup},
+                                            h_parameter : host,
+                                            hg_parameter: hostgroup},
                                  "selectHosts": ["name"]})
 
         l_items = [i["itemid"] for i in items]
