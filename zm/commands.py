@@ -76,12 +76,12 @@ class CommandItemEnable(Command):
                                  help="Zabbix item name or ID.")
 
         self.parser.add_argument("--host",
-                                 metavar="HOST",
-                                 help="Filter by Zabbix host.")
+                                 metavar="ID/HOSTNAME",
+                                 help="Filter by Zabbix hostname or ID.")
 
         self.parser.add_argument("--hostgroup",
-                                 metavar="HOSTGROUP",
-                                 help="Filter by Zabbix hostgroup.")
+                                 metavar="ID/HOSTGROUP",
+                                 help="Filter by Zabbix hostgroup name or ID.")
 
     def run(self):
         zm.item.update(CONF.command.id,
