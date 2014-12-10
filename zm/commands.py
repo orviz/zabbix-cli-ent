@@ -6,9 +6,11 @@ import zm.hostgroup
 import zm.item
 import zm.macro
 import zm.template
+import zm.trigger
 import zm.utils
 
 from oslo.config import cfg
+from zm.utils import TableOutput
 
 
 CONF = cfg.CONF
@@ -22,6 +24,7 @@ def add_command_parsers(subparsers):
     CommandMacroList(subparsers)
     CommandMacroUpdate(subparsers)
     CommandTemplateList(subparsers)
+    CommandTriggerList(subparsers)
 
 
 command_opt = cfg.SubCommandOpt('command',
@@ -48,8 +51,11 @@ class CommandHostgroupList(Command):
                  cmd_help="List hostgroups."):
         super(CommandHostgroupList, self).__init__(parser, name, cmd_help)
 
+        self.output = {"groupid": "ID", "name": "Name"}
+
     def run(self):
-        zm.hostgroup.list()
+        print(TableOutput(zm.hostgroup.list(),
+                          output=self.output))
 
 
 class CommandItemList(Command):
@@ -61,8 +67,11 @@ class CommandItemList(Command):
                                  metavar="ID/HOSTNAME",
                                  help="Zabbix hostname or ID.")
 
+        self.output = {"itemid": "ID", "name": "Name", "status": "Value" }
+
     def run(self):
-        zm.item.list(CONF.command.host)
+        print(TableOutput(zm.item.list(CONF.command.host),
+                          output=self.output))
 
 
 class CommandItemEnable(Command):
@@ -71,7 +80,7 @@ class CommandItemEnable(Command):
         super(CommandItemEnable, self).__init__(parser, name, cmd_help)
 
         self.parser.add_argument("id",
-                                 nargs="*",
+                                 nargs="+",
                                  metavar="ID/NAME",
                                  help="Zabbix item name or ID.")
 
@@ -96,6 +105,7 @@ class CommandItemDisable(Command):
         super(CommandItemDisable, self).__init__(parser, name, cmd_help)
 
         self.parser.add_argument("id",
+                                 nargs="+",
                                  metavar="ID",
                                  help="Zabbix item name or ID.")
 
@@ -119,8 +129,14 @@ class CommandMacroList(Command):
                  cmd_help="List user macros."):
         super(CommandMacroList, self).__init__(parser, name, cmd_help)
 
+        self.output = {"scope": "Scope",
+                       "hostmacroid": "ID",
+                       "macro": "Name",
+                       "value": "Value"}
+
     def run(self):
-        zm.macro.list()
+        print(TableOutput(zm.macro.list(),
+                          output=self.output))
 
 
 class CommandMacroUpdate(Command):
@@ -148,17 +164,50 @@ class CommandTemplateList(Command):
 
         self.parser.add_argument("--host",
                                  metavar="HOST",
-                                 nargs="*",
-                                 help="Zabbix host name. Accepts multiple values.")
+                                 help="Zabbix host name.")
 
         self.parser.add_argument("--group",
                                  metavar="HOSTGROUP",
-                                 nargs="*",
-                                 help="Zabbix hosgroup name. Accepts multiple values.")
+                                 help="Zabbix hosgroup name.")
+
+        self.output = {"templateid": "ID",
+                       "name": "Name",
+                       "status": "Status"}
 
     def run(self):
-        zm.template.list(CONF.command.host,
-                         CONF.command.group)
+        print(TableOutput(zm.template.list(CONF.command.host,
+                                           CONF.command.group),
+                          output=self.output))
+
+
+class CommandTriggerList(Command):
+    def __init__(self, parser, name="trigger-list",
+                 cmd_help="List host triggers."):
+        super(CommandTriggerList, self).__init__(parser, name, cmd_help)
+
+        self.parser.add_argument("host",
+                                 metavar="ID/HOSTNAME",
+                                 help="Zabbix hostname or ID.")
+
+        self.parser.add_argument("--priority",
+                                 "-p",
+                                 metavar="[DISASTER|HIGH|AVERAGE|WARNING|INFORMATION|NOTCLASSIFIED]",
+                                 help="Trigger priority or ID.")
+
+        self.parser.add_argument("--omit-ack",
+                                 action="store_true",
+                                 help="Show only unacknowledged triggers.")
+
+        self.output = {"triggerid": "ID",
+                       "description": "Description",
+                       "value": "Status"}
+
+    def run(self):
+        print(TableOutput(zm.trigger.list(CONF.command.host,
+                                          priority=CONF.command.priority,
+                                          omit_ack=CONF.command.omit_ack),
+                          self.output))
+
 
 class CommandManager(object):
     def execute(self):

@@ -14,21 +14,19 @@ ITEM_STATUS = {
 
 @zm.utils.login
 def list(conn, host):
+    params = {}
+
     try:
         int(host)
-        parameter = "hostids"
+        params["hostids"] = host
     except ValueError:
-        parameter = "host"
+        params["host"] = host
 
-    l = []
-    for item in zm.zutils.get(conn,
-                              type="item",
-                              parameter=parameter,
-                              value=host,
-                              output=["status", "name"]):
-        l.append([item["itemid"], item["name"], ITEM_STATUS[item["status"]]])
-    if l:
-        zm.utils.print_table(["ID", "Name", "Value"], sorted(l))
+    return zm.zutils.get(conn,
+                         type="item",
+                         params=params,
+                         value=host,
+                         output="extend")
 
 
 @zm.utils.login
@@ -41,10 +39,12 @@ def update(conn, id, status, host=None, hostgroup=None):
         except ValueError:
             parameter = "name"
 
+        params = {parameter: narg}
+        print(params)
+
         items.extend(zm.zutils.get(conn,
                                    type="item",
-                                   parameter=parameter,
-                                   value=narg,
+                                   params={parameter: narg},
                                    output=["status", "name"],
                                    **{"selectHosts": ["name"]}))
 

@@ -32,14 +32,26 @@ def login(func):
     return _login
 
 
-def print_table(columns, row_content, padding_width=1):
-    """
-    Prints a prettytable for the arguments received.
-        columns; list of column names
-        row_content; list of lists containing column values
-    """
-    x = prettytable.PrettyTable(columns)
-    x.padding_width = padding_width
-    for row in row_content:
-        x.add_row(row)
-    print(x)
+class TableOutput(object):
+    def __init__(self, l, output):
+        self.l = l
+        self.output = output
+
+    def __str__(self):
+        l = []
+        for d in self.l:
+            l.append([d[i] for i in self.output.keys()])
+
+        return self.print_table(self.output.values(), sorted(l))
+
+    def print_table(self, columns, row_content, padding_width=1):
+        """
+        Prints a prettytable for the arguments received.
+            columns; list of column names
+            row_content; list of lists containing column values
+        """
+        x = prettytable.PrettyTable(columns)
+        x.padding_width = padding_width
+        for row in row_content:
+            x.add_row(row)
+        return str(x)

@@ -47,6 +47,29 @@ via a configuration file. Either way, the login, password
 and url must be provided in order to get a successfully
 connection.
 
+Use it programatically
+----------------------
+
+You can also use zabbix-cli-ent as a library to get data from a
+Zabbix API.
+
+For that you first need to provide the credentials to be able to
+access any of the available functionality. As an example:
+
+.. code:: Python
+
+    import zm.trigger
+    from oslo.config import cfg
+
+    CONF = cfg.CONF
+    CONF.username="foo"
+    CONF.password="bar"
+    CONF.url="https://example.com/zabbix"
+
+
+    print zm.trigger.list(host="host.example.com",
+                          priority="DISASTER",
+                          omit_ack=True,)
 
 Extending Functionality
 -----------------------
