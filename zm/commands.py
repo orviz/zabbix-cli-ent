@@ -194,6 +194,10 @@ class CommandTriggerList(Command):
                                  metavar="[DISASTER|HIGH|AVERAGE|WARNING|INFORMATION|NOTCLASSIFIED]",
                                  help="Trigger priority or ID.")
 
+        self.parser.add_argument("--last-change-since",
+                                 metavar="UNIX TIMESTAMP",
+                                 help="(epoch) time from which triggers have changed their state.")
+
         self.parser.add_argument("--problematic",
                                  action="store_true",
                                  help="Show only triggers in a problem state.")
@@ -213,8 +217,12 @@ class CommandTriggerList(Command):
                        "priority": "Priority"}
 
     def run(self):
+        if CONF.command.last_change_since:
+            self.output.update({"lastchange": "Last change"})
+
         print(TableOutput(zm.trigger.list(CONF.command.host,
                                           priority=CONF.command.priority,
+                                          last_change_since=CONF.command.last_change_since,
                                           problematic=CONF.command.problematic,
                                           monitored=CONF.command.monitored,
                                           unacknowledged=CONF.command.unacknowledged),
