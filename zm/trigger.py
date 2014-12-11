@@ -18,17 +18,22 @@ PRIORITY = {
 
 @zm.utils.login
 def list(conn,
-         host,
+         host=None,
          priority=None,
-         omit_ack=False):
+         problematic=True,
+         monitored=True,
+         unacknowledged=True):
     params = {}
     flags = {}
 
-    try:
-        int(host)
-        params["hostids"] = host
-    except ValueError:
-        params["host"] = host
+    flags["selectHosts"] = "extend"
+
+    if host:
+        try:
+            int(host)
+            params["hostids"] = host
+        except ValueError:
+            params["host"] = host
 
     if priority:
         try:
@@ -40,11 +45,29 @@ def list(conn,
             except ValueError:
                 pass
 
-    if omit_ack:
-        flags["withUnacknowledgedEvents"] = "extend"
+    if problematic:
+        params["value"] = "1"
 
-    return zm.zutils.get(conn,
-                         type="trigger",
-                         params=params,
-                         output="extend",
-                         **flags)
+    if monitored:
+        flags["monitored"] = "extend"
+
+    if unacknowledged:
+        flags["withLastEventUnacknowledged"] = "extend"
+
+
+    l = []
+    for trigger in zm.zutils.get(conn,
+                                 type="trigger",
+                                 params=params,
+                                 # 'extend' is not recommended since
+                                 # can hit memory allocation on server
+                                 output=["triggerid",
+                                         "description",
+                                         "value",
+                                         "hosts",
+                                         "priority"],
+                                 **flags):
+        trigger.update({"host_at": trigger["hosts"][0]["host"]})
+        l.append(trigger)
+
+    return l
