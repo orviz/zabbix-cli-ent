@@ -20,6 +20,7 @@ PRIORITY = {
 def list(conn,
          host=None,
          priority=None,
+         last_change_since=None,
          problematic=True,
          monitored=True,
          unacknowledged=True):
@@ -48,6 +49,9 @@ def list(conn,
     if problematic:
         params["value"] = "1"
 
+    if last_change_since:
+        flags["lastChangeSince"] = last_change_since
+
     if monitored:
         flags["monitored"] = "extend"
 
@@ -65,7 +69,8 @@ def list(conn,
                                          "description",
                                          "value",
                                          "hosts",
-                                         "priority"],
+                                         "priority",
+                                         "lastchange"],
                                  **flags):
         trigger.update({"host_at": trigger["hosts"][0]["host"]})
         l.append(trigger)
