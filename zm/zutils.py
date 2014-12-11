@@ -8,7 +8,5 @@ def get(conn, type, params={}, output="extend", **kwargs):
         "trigger": conn.trigger.get,
         "usermacro": conn.usermacro.get,
     }
-    if params:
-        return types[type](filter=params, output=output, **kwargs)
-    else:
-        return types[type](output=output, **kwargs)
+
+    return types[type](filter=params, output=output, **kwargs)

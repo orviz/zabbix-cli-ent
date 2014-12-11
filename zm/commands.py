@@ -185,7 +185,7 @@ class CommandTriggerList(Command):
                  cmd_help="List host triggers."):
         super(CommandTriggerList, self).__init__(parser, name, cmd_help)
 
-        self.parser.add_argument("host",
+        self.parser.add_argument("--host",
                                  metavar="ID/HOSTNAME",
                                  help="Zabbix hostname or ID.")
 
@@ -194,18 +194,30 @@ class CommandTriggerList(Command):
                                  metavar="[DISASTER|HIGH|AVERAGE|WARNING|INFORMATION|NOTCLASSIFIED]",
                                  help="Trigger priority or ID.")
 
-        self.parser.add_argument("--omit-ack",
+        self.parser.add_argument("--problematic",
+                                 action="store_true",
+                                 help="Show only triggers in a problem state.")
+
+        self.parser.add_argument("--monitored",
+                                 action="store_true",
+                                 help="Show only triggers mapped to enabled items.")
+
+        self.parser.add_argument("--unacknowledged",
                                  action="store_true",
                                  help="Show only unacknowledged triggers.")
 
         self.output = {"triggerid": "ID",
                        "description": "Description",
-                       "value": "Status"}
+                       "host_at": "Host name",
+                       "value": "Status",
+                       "priority": "Priority"}
 
     def run(self):
         print(TableOutput(zm.trigger.list(CONF.command.host,
                                           priority=CONF.command.priority,
-                                          omit_ack=CONF.command.omit_ack),
+                                          problematic=CONF.command.problematic,
+                                          monitored=CONF.command.monitored,
+                                          unacknowledged=CONF.command.unacknowledged),
                           self.output))
 
 
