@@ -24,17 +24,24 @@ Getting Started
 Install `zabbix-cli-ent` using `pip`, either by getting the
 version uploaded in PyPi:
 
-    # pip install zm
+.. code:: bash
+
+    $ pip install zm
 
 or the one from the current repo:
 
-    # git clone https://github.com/orviz/zabbix-cli-ent.git
-    # cd zabbix-cli-ent && pip install .
+.. code:: bash
+
+    $ git clone https://github.com/orviz/zabbix-cli-ent.git
+    $ cd zabbix-cli-ent && pip install .
 
 
-### Basic Usage
+Basic Usage
+-----------
 
-    # zm --help
+.. code:: bash
+
+    $ zm --help
 
 will list the current actions that can be performed.
 
@@ -50,8 +57,8 @@ connection.
 Use it programatically
 ----------------------
 
-You can also use zabbix-cli-ent as a library to get data from a
-Zabbix API.
+You can also use zabbix-cli-ent as a Python library to get data
+from a Zabbix API.
 
 For that you first need to provide the credentials to be able to
 access any of the available functionality. As an example:
@@ -76,12 +83,13 @@ Extending Functionality
 
 The code allows to easily extend the functionality. To do
 so:
-    1. Create a new `Command` inherited class that will
-       handle the new functionality.
-       * (`__init__()`) Here you will define the new
-          action's options.
-       * (`run()`) The work to be done.
-    2. Add the brand new class to:
-           `commands.py` > `add_command_parsers()`
+
+1. Create a new ``Command`` inherited class that will
+   handle the new functionality.
+
+   - ``__init__()``, where you will define the new action's options.
+   - ``run()``, sets the work to be done.
+
+2. Add the brand new class to: ``commands.py`` > ``add_command_parsers()``
 
 There you go!
